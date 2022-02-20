@@ -1,10 +1,15 @@
 root = true
 # top-most EditorConfig file
 
+# .NET naming reference: https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/naming-rules
+
 # Don't use tabs for indentation.
 [*]
 indent_style = space
 end_of_line = lf
+charset = utf-8
+insert_final_newline = false
+indent_size = 2
 
 # ReSharper properties
 resharper_accessor_owner_body = expression_body
@@ -23,9 +28,6 @@ resharper_arrange_default_value_when_type_not_evident_highlighting = suggestion
 resharper_arrange_local_function_body_highlighting = hint
 resharper_arrange_method_or_operator_body_highlighting = suggestion
 resharper_arrange_object_creation_when_type_not_evident_highlighting = suggestion
-charset = utf-8
-insert_final_newline = false
-indent_size = 4
 resharper_arrange_redundant_parentheses_highlighting = hint
 resharper_arrange_this_qualifier_highlighting = hint
 resharper_arrange_type_member_modifiers_highlighting = hint
@@ -197,7 +199,7 @@ dotnet_naming_rule.locals_should_be_camel_case.style = lower_camel_case_style
 
 dotnet_naming_symbols.locals_and_parameters.applicable_kinds = parameter, local
 
-dotnet_naming_style.camel_case_style.capitalization = camel_case
+dotnet_naming_style.lower_camel_case_style.capitalization = camel_case
 
 # Local functions are PascalCase
 dotnet_naming_rule.local_functions_should_be_pascal_case.severity = suggestion

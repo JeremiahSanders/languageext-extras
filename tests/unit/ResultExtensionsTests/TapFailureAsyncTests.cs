@@ -16,12 +16,12 @@ public class TapFailureAsyncTests
   {
     Exception? onFailureValue = null;
 
-    await SuccessfulResult.TapFailureAsync( async exception =>
+    await SuccessfulResult.TapFailureAsync(async exception =>
     {
       await Task.Delay(1);
       onFailureValue = exception;
     });
-    
+
     Assert.Null(onFailureValue);
   }
 
@@ -30,12 +30,12 @@ public class TapFailureAsyncTests
   {
     Exception? onFailureValue = null;
 
-    await FailureResult.TapFailureAsync( async exception =>
+    await FailureResult.TapFailureAsync(async exception =>
     {
       await Task.Delay(1);
       onFailureValue = exception;
     });
-    
+
     Assert.Equal(FailureValue, onFailureValue);
   }
 }

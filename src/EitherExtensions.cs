@@ -40,7 +40,7 @@ public static class EitherExtensions
     return either.Bind(right =>
       filter(right)
         ? Prelude.Right<TLeft, TRight>(right)
-        : Prelude.Left<TLeft, TRight>(value: onFalse(right)));
+        : Prelude.Left<TLeft, TRight>(onFalse(right)));
   }
 
   /// <summary>
@@ -75,7 +75,7 @@ public static class EitherExtensions
     return either.BindAsync(async right =>
       await filter(right)
         ? Prelude.Right<TLeft, TRight>(right)
-        : Prelude.Left<TLeft, TRight>(value: onFalse(right)));
+        : Prelude.Left<TLeft, TRight>(onFalse(right)));
   }
 
   /// <summary>
@@ -110,7 +110,7 @@ public static class EitherExtensions
     return either.BindAsync(async right =>
       await filter(right)
         ? Prelude.Right<TLeft, TRight>(right)
-        : Prelude.Left<TLeft, TRight>(value: await onFalse(right)));
+        : Prelude.Left<TLeft, TRight>(await onFalse(right)));
   }
 
   /// <summary>
@@ -280,7 +280,7 @@ public static class EitherExtensions
   /// <returns>A <see cref="Result{A}" />.</returns>
   public static Result<TRight> ToResult<TLeft, TRight>(this Either<TLeft, TRight> either, Func<TLeft, Exception> ifLeft)
   {
-    return either.Match(right => new Result<TRight>(right), left => new Result<TRight>(e: ifLeft(left)));
+    return either.Match(right => new Result<TRight>(right), left => new Result<TRight>(ifLeft(left)));
   }
 
   /// <summary>

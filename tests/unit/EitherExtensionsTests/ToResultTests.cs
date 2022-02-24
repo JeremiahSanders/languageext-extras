@@ -36,13 +36,13 @@ public class ToResultTests
       new object[] { Prelude.Right<string, int>(RightValue), RightResult },
       new object[]
       {
-        Prelude.Left<string, int>(LeftStringValue), new Result<int>(e: ToArgumentException(LeftStringValue))
+        Prelude.Left<string, int>(LeftStringValue), new Result<int>(ToArgumentException(LeftStringValue))
       }
     };
   }
 
   [Theory]
-  [MemberData(memberName: nameof(CreateExceptionTestCases))]
+  [MemberData(nameof(CreateExceptionTestCases))]
   public void GivenLeftException_ReturnsExpectedValues(Either<ArgumentNullException, int> either, Result<int> expected)
   {
     var actual = either.ToResult();
@@ -51,7 +51,7 @@ public class ToResultTests
   }
 
   [Theory]
-  [MemberData(memberName: nameof(CreateNonExceptionTestCases))]
+  [MemberData(nameof(CreateNonExceptionTestCases))]
   public void GivenLeftNonException_ReturnsExpectedValues(Either<string, int> either, Result<int> expected)
   {
     var actual = either.ToResult(ToArgumentException);

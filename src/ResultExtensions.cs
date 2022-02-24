@@ -51,6 +51,113 @@ public static class ResultExtensions
   }
 
   /// <summary>
+  ///   Filters right values by executing <paramref name="filter" />. If true, returns the current
+  ///   <typeparamref name="TSuccess" /> value. If false, executes <paramref name="onFalse" /> to convert the filtered
+  ///   <typeparamref name="TSuccess" /> to an <see cref="Exception" />.
+  /// </summary>
+  /// <param name="result">A <see cref="Result{A}" />.</param>
+  /// <param name="filter">
+  ///   A filtering function. If true, value continues as-is. If false, value is converted to an <see cref="Exception" />
+  ///   with <paramref name="onFalse" />.
+  /// </param>
+  /// <param name="onFalse">
+  ///   A function to convert <typeparamref name="TSuccess" /> to an <see cref="Exception" />.
+  /// </param>
+  /// <typeparam name="TSuccess">A success type.</typeparam>
+  /// <returns>
+  ///   A <see cref="Result{A}" />. If <paramref name="filter" /> returns true, current <typeparamref name="TSuccess" /> is
+  ///   returned. If it returns false, the converted <see cref="Exception" /> is returned.
+  /// </returns>
+  public static Result<TSuccess> Filter<TSuccess>(this Result<TSuccess> result,
+    Func<TSuccess, bool> filter,
+    Func<TSuccess, Exception> onFalse
+  )
+  {
+    return result.Bind(value => filter(value)
+      ? new Result<TSuccess>(value)
+      : new Result<TSuccess>(onFalse(value)));
+  }
+
+  /// <summary>
+  ///   Filters right values by executing <paramref name="filter" />. If true, returns the current
+  ///   <typeparamref name="TSuccess" /> value. If false, executes <paramref name="onFalse" /> to convert the filtered
+  ///   <typeparamref name="TSuccess" /> to an <see cref="Exception" />.
+  /// </summary>
+  /// <param name="result">A <see cref="Result{A}" />.</param>
+  /// <param name="filter">
+  ///   A filtering function. If true, value continues as-is. If false, value is converted to an <see cref="Exception" />
+  ///   with <paramref name="onFalse" />.
+  /// </param>
+  /// <param name="onFalse">
+  ///   A function to convert <typeparamref name="TSuccess" /> to an <see cref="Exception" />.
+  /// </param>
+  /// <typeparam name="TSuccess">A success type.</typeparam>
+  /// <returns>
+  ///   A <see cref="Result{A}" />. If <paramref name="filter" /> returns true, current <typeparamref name="TSuccess" /> is
+  ///   returned. If it returns false, the converted <see cref="Exception" /> is returned.
+  /// </returns>
+  public static Task<Result<TSuccess>> FilterAsync<TSuccess>(this Result<TSuccess> result,
+    Func<TSuccess, Task<bool>> filter,
+    Func<TSuccess, Exception> onFalse
+  )
+  {
+    return result.BindAsync(async value => await filter(value)
+      ? new Result<TSuccess>(value)
+      : new Result<TSuccess>(onFalse(value)));
+  }
+
+  /// <summary>
+  ///   Filters right values by executing <paramref name="filter" />. If true, returns the current
+  ///   <typeparamref name="TSuccess" /> value. If false, executes <paramref name="onFalse" /> to convert the filtered
+  ///   <typeparamref name="TSuccess" /> to an <see cref="Exception" />.
+  /// </summary>
+  /// <param name="result">A <see cref="Result{A}" />.</param>
+  /// <param name="filter">
+  ///   A filtering function. If true, value continues as-is. If false, value is converted to an <see cref="Exception" />
+  ///   with <paramref name="onFalse" />.
+  /// </param>
+  /// <param name="onFalse">
+  ///   A function to convert <typeparamref name="TSuccess" /> to an <see cref="Exception" />.
+  /// </param>
+  /// <typeparam name="TSuccess">A success type.</typeparam>
+  /// <returns>
+  ///   A <see cref="Result{A}" />. If <paramref name="filter" /> returns true, current <typeparamref name="TSuccess" /> is
+  ///   returned. If it returns false, the converted <see cref="Exception" /> is returned.
+  /// </returns>
+  public static Task<Result<TSuccess>> FilterAsync<TSuccess>(this Result<TSuccess> result,
+    Func<TSuccess, Task<bool>> filter,
+    Func<TSuccess, Task<Exception>> onFalse
+  )
+  {
+    return result.BindAsync(async value => await filter(value)
+      ? new Result<TSuccess>(value)
+      : new Result<TSuccess>(await onFalse(value)));
+  }
+
+  /// <summary>
+  ///   Gets the value of <paramref name="result" />, throwing an <see cref="InvalidOperationException" /> if it is a
+  ///   failure.
+  /// </summary>
+  /// <remarks>
+  ///   This method supports testing. Specifically, since test runners treat uncaught exceptions as test failures,
+  ///   <see cref="IfFailThrow{TSuccess}" /> can be used within test methods to unpack test arrangement results and fail the
+  ///   test if an <see cref="Exception" /> occurred during the arranged workflow (which resulted in
+  ///   <paramref name="result" />).
+  /// </remarks>
+  /// <typeparam name="TSuccess">A success type.</typeparam>
+  /// <param name="result">A <see cref="Result{A}" />.</param>
+  /// <returns>The success value in <paramref name="result" />.</returns>
+  /// <exception cref="InvalidOperationException">
+  ///   Thrown when <paramref name="result" /> is a failure. The failure
+  ///   <see cref="Exception" /> will be the <see cref="Exception.InnerException" />.
+  /// </exception>
+  public static TSuccess IfFailThrow<TSuccess>(this Result<TSuccess> result)
+  {
+    return result.IfFail(exception => throw new InvalidOperationException("Result was a failure.", exception));
+  }
+
+
+  /// <summary>
   ///   Execute a side effect and returns <paramref name="result" /> unchanged.
   /// </summary>
   /// <remarks>

@@ -23,16 +23,13 @@ public class FilterTests
     return new[]
     {
       new object[] { Prelude.Right<string, int>(goodValue), Prelude.Right<string, int>(goodValue) },
-      new object[] { Prelude.Right<string, int>(badValue), Prelude.Left<string, int>(value: badValue.ToString()) },
-      new object[]
-      {
-        Prelude.Left<string, int>(value: "existing value"), Prelude.Left<string, int>(value: "existing value")
-      }
+      new object[] { Prelude.Right<string, int>(badValue), Prelude.Left<string, int>(badValue.ToString()) },
+      new object[] { Prelude.Left<string, int>("existing value"), Prelude.Left<string, int>("existing value") }
     };
   }
 
   [Theory]
-  [MemberData(memberName: nameof(CreateTestCases))]
+  [MemberData(nameof(CreateTestCases))]
   public void ReturnsExpectedResults(Either<string, int> either, Either<string, int> expected)
   {
     var actual = either.Filter(FilterFunc, RightToLeftConverter);

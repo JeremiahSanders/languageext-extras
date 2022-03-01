@@ -5,7 +5,7 @@ using LanguageExt.Common;
 
 namespace Jds.LanguageExt.Extras;
 
-public static class StringExtensions
+internal static class StringExtensions
 {
   public static Result<T> TryDeserializeJson<T>(this string possibleJson, JsonSerializerOptions? options = null)
     where T : notnull

@@ -1,0 +1,43 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>Jds.LanguageExt.Extras</RootNamespace>
+  </PropertyGroup>
+  
+  <PropertyGroup>
+    <Authors>jds</Authors>
+    <Company />
+    <Copyright>Copyright (c) 2022 Jeremiah Sanders</Copyright>
+    <Description>LanguageExt.Extras</Description>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageId>Jds.LanguageExt.Extras</PackageId>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/JeremiahSanders/languageext-extras</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageTags>functional</PackageTags>
+    <PackAsTool>false</PackAsTool>
+    <Product>LanguageExt.Extras</Product>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/JeremiahSanders/languageext-extras</RepositoryUrl>
+    <Title>LanguageExt.Extras</Title>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="$(AssemblyName).Tests.Unit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="LanguageExt.Core" Version="4.0.3" />
+  </ItemGroup>
+
+</Project>

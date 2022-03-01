@@ -3,7 +3,7 @@ using LanguageExt.Common;
 
 namespace Jds.LanguageExt.Extras;
 
-public static class HttpClientExtensions
+internal static class HttpClientExtensions
 {
   private const HttpCompletionOption DefaultCompletionOption = HttpCompletionOption.ResponseContentRead;
 

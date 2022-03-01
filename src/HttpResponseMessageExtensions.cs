@@ -1,10 +1,12 @@
+using System.Net.Http.Json;
 using System.Text.Json;
 
+using LanguageExt;
 using LanguageExt.Common;
 
 namespace Jds.LanguageExt.Extras;
 
-public static class HttpResponseMessageExtensions
+internal static class HttpResponseMessageExtensions
 {
   public static Task<Result<string>> TryReadContentAsStringAsync(this HttpResponseMessage message,
     CancellationToken cancellationToken = default)
@@ -16,8 +18,11 @@ public static class HttpResponseMessageExtensions
     JsonSerializerOptions? options = null,
     CancellationToken cancellationToken = default) where T : notnull
   {
-    return (await message.TryReadContentAsStringAsync(cancellationToken)).Bind(body =>
-      body.TryDeserializeJson<T>(options));
+    return await Prelude.TryAsync(async () =>
+        await message.Content.ReadFromJsonAsync<T>(options, cancellationToken) ??
+        throw new Exception("Failed to deserialize JSON")
+      )
+      .Try();
   }
 
   public static async Task<(HttpResponseMessage Message, Result<string> Content, Result<T> Body)>

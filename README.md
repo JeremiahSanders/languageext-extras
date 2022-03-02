@@ -55,6 +55,24 @@ using Jds.LanguageExt.Extras;
 * `Either<TLeft, TRight>.ToResult<TLeft, TRight>() where TLeft : Exception`
   * Converts the `Either<TLeft, TRight>` into a `Result<TRight>`.
 
+### `Option<TSome>` Extensions
+
+* `Option<TSome>.Tap(Action<TSome> ifSome, Action ifNone)`
+  * Executes a side effect, e.g., logging, based upon the state of the option. The current value is returned unchanged.
+* `Option<TSome>.TapAsync(Func<TSome,Task> ifSome, Func<Task> ifNone)`
+  * Executes an asynchronous side effect, e.g., dispatching a status notification via `HttpClient`, based upon the state of the option. The current value is returned unchanged.
+* `Option<TSome>.TapNone(Action ifNone)`
+  * Executes a side effect, e.g., logging, if the option is None. The current value is returned unchanged.
+* `Option<TSome>.TapNoneAsync(Func<Task> ifNone)`
+  * Executes an asynchronous side effect, e.g., dispatching a status notification via `HttpClient`, if the option is None. The current value is returned unchanged.
+* `Option<TSome>.TapSome(Action<TSome> ifSome)`
+  * Executes a side effect, e.g., logging, if the option is Some. The current value is returned unchanged.
+* `Option<TSome>.TapSomeAsync(Func<TSome,Task> ifSome)`
+  * Executes an asynchronous side effect, e.g., dispatching a status notification via `HttpClient`, if the option is Some. The current value is returned unchanged.
+* `Option<TSome?>`.ToNonNullable()
+  * Converts the nullable `TSome` generic argument to a non-nullable `TSome` generic argument, e.g., `Option<string?>` returns `Option<string>`. The existing value is maintained unchanged.
+  * **This method assumes execution within a [`#nullable` context][nullable-context] (i.e., in a project where nullable reference types are enabled).**
+
 ### `Result<TSuccess>` Extensions
 
 * `Result<TSuccess>.Bind<TSuccess, TNewSuccess>(Func<TSuccess, Result<TNewSuccess>> func)`
@@ -92,3 +110,5 @@ using Jds.LanguageExt.Extras;
 [LanguageExt license]: https://github.com/louthy/language-ext/blob/main/LICENSE.md
 
 [nuget.org]: https://www.nuget.org/packages/Jds.LanguageExt.Extras/
+
+[nullable-context]: https://docs.microsoft.com/en-us/dotnet/csharp/nullable-references#nullable-contexts

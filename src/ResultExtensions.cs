@@ -51,6 +51,46 @@ public static class ResultExtensions
   }
 
   /// <summary>
+  ///   Execute <paramref name="func" />, which returns a <see cref="Result{A}" />, when <paramref name="result" /> is
+  ///   failure.
+  /// </summary>
+  /// <remarks>Commonly used to retry or recover <see cref="Prelude.Try{A}(System.Func{A})" /> executions in a workflow.</remarks>
+  /// <param name="result">A <see cref="Result{A}" />.</param>
+  /// <param name="func">
+  ///   A function which accepts a <typeparamref name="TSuccess" /> and returns a
+  ///   <see cref="Result{A}" />.
+  /// </param>
+  /// <typeparam name="TSuccess">A success type.</typeparam>
+  /// <returns>A <see cref="Result{A}" />.</returns>
+  public static Result<TSuccess> BindFailure<TSuccess>(this Result<TSuccess> result,
+    Func<Exception, Result<TSuccess>> func)
+  {
+    return result.Match(_ => result, func);
+  }
+
+  /// <summary>
+  ///   Execute <paramref name="func" />, which returns a <see cref="Task" /> of a <see cref="Result{A}" />, when
+  ///   <paramref name="result" /> is failure.
+  /// </summary>
+  /// <remarks>
+  ///   Commonly used to retry or recover <see cref="Prelude.TryAsync{A}(System.Func{System.Threading.Tasks.Task{A}})" />
+  ///   executions in a workflow.
+  /// </remarks>
+  /// <param name="result">A <see cref="Result{A}" />.</param>
+  /// <param name="func">
+  ///   A function which accepts a <typeparamref name="TSuccess" /> and returns a
+  ///   <see cref="Task" /> of <see cref="Result{A}" />.
+  /// </param>
+  /// <typeparam name="TSuccess">A success type.</typeparam>
+  /// <returns>A <see cref="Result{A}" />.</returns>
+  public static Task<Result<TSuccess>> BindFailureAsync<TSuccess>(this Result<TSuccess> result,
+    Func<Exception, Task<Result<TSuccess>>> func)
+  {
+    return result.Match(_ => result.AsTask(),
+      async success => await func(success));
+  }
+
+  /// <summary>
   ///   Filters right values by executing <paramref name="filter" />. If true, returns the current
   ///   <typeparamref name="TSuccess" /> value. If false, executes <paramref name="onFalse" /> to convert the filtered
   ///   <typeparamref name="TSuccess" /> to an <see cref="Exception" />.
@@ -156,6 +196,37 @@ public static class ResultExtensions
     return result.IfFail(exception => throw new InvalidOperationException("Result was a failure.", exception));
   }
 
+  /// <summary>
+  ///   Converts an existing <see cref="Exception" /> into a new type, using <paramref name="func" />, if
+  ///   <paramref name="result" /> is a failure.
+  /// </summary>
+  /// <param name="result">A <see cref="Result{A}" />.</param>
+  /// <param name="func">A <see cref="Func{T,TResult}" /></param>
+  /// <typeparam name="TSuccess">A success type.</typeparam>
+  /// <typeparam name="TFailure">A new <see cref="Exception" />.</typeparam>
+  /// <returns>A <see cref="Result{A}" />.</returns>
+  public static Result<TSuccess> MapFailure<TSuccess, TFailure>(this Result<TSuccess> result,
+    Func<Exception, TFailure> func)
+    where TFailure : Exception
+  {
+    return result.Match(_ => result, exception => new Result<TSuccess>(func(exception)));
+  }
+
+  /// <summary>
+  ///   Asynchronously converts an existing <see cref="Exception" /> into a new type, using <paramref name="func" />, if
+  ///   <paramref name="result" /> is a failure.
+  /// </summary>
+  /// <param name="result">A <see cref="Result{A}" />.</param>
+  /// <param name="func">A <see cref="Func{T,TResult}" /></param>
+  /// <typeparam name="TSuccess">A success type.</typeparam>
+  /// <typeparam name="TFailure">A new <see cref="Exception" />.</typeparam>
+  /// <returns>A <see cref="Result{A}" />.</returns>
+  public static Task<Result<TSuccess>> MapFailureAsync<TSuccess, TFailure>(this Result<TSuccess> result,
+    Func<Exception, Task<TFailure>> func)
+    where TFailure : Exception
+  {
+    return result.Match(_ => result.AsTask(), async exception => new Result<TSuccess>(await func(exception)));
+  }
 
   /// <summary>
   ///   Execute a side effect and returns <paramref name="result" /> unchanged.

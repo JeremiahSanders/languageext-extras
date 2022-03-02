@@ -9,6 +9,23 @@ namespace Jds.LanguageExt.Extras;
 public static class EitherExtensions
 {
   /// <summary>
+  ///   Execute <paramref name="func" /> when <paramref name="either" /> is a Left.
+  ///   Performs an asynchronous equivalent to <see cref="Either{L,R}.BindLeft{B}" />.
+  /// </summary>
+  /// <param name="either">An <see cref="Either{L,R}" />.</param>
+  /// <param name="func">An asynchronous Left mapping function.</param>
+  /// <typeparam name="TLeft">A left type.</typeparam>
+  /// <typeparam name="TRight">A right type.</typeparam>
+  /// <typeparam name="TLeft2">A new left type.</typeparam>
+  /// <returns></returns>
+  public static async Task<Either<TLeft2, TRight>> BindLeftAsync<TLeft, TRight, TLeft2>(
+    this Either<TLeft, TRight> either, Func<TLeft, Task<Either<TLeft2, TRight>>> func)
+  {
+    return await either.MatchAsync(right => Prelude.Right<TLeft2, TRight>(right),
+      async left => await func(left));
+  }
+
+  /// <summary>
   ///   Filters right values by executing <paramref name="filter" />. If true, returns the current
   ///   <typeparamref name="TRight" /> value. If false, executes <paramref name="onFalse" /> to convert the filtered
   ///   <typeparamref name="TRight" /> to a <typeparamref name="TLeft" />.
@@ -111,6 +128,23 @@ public static class EitherExtensions
       await filter(right)
         ? Prelude.Right<TLeft, TRight>(right)
         : Prelude.Left<TLeft, TRight>(await onFalse(right)));
+  }
+
+  /// <summary>
+  ///   Execute <paramref name="func" /> when <paramref name="either" /> is a Left.
+  ///   Performs an asynchronous equivalent to <see cref="Either{L,R}.MapLeft{Ret}" />.
+  /// </summary>
+  /// <param name="either">An <see cref="Either{L,R}" />.</param>
+  /// <param name="func">An asynchronous Left mapping function.</param>
+  /// <typeparam name="TLeft">A left type.</typeparam>
+  /// <typeparam name="TRight">A right type.</typeparam>
+  /// <typeparam name="TLeft2">A new left type.</typeparam>
+  /// <returns></returns>
+  public static async Task<Either<TLeft2, TRight>> MapLeftAsync<TLeft, TRight, TLeft2>(
+    this Either<TLeft, TRight> either, Func<TLeft, Task<TLeft2>> func)
+  {
+    return await either.MatchAsync(right => Prelude.Right<TLeft2, TRight>(right),
+      async left => Prelude.Left<TLeft2, TRight>(await func(left)));
   }
 
   /// <summary>

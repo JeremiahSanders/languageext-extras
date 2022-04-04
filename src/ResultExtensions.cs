@@ -229,6 +229,62 @@ public static class ResultExtensions
   }
 
   /// <summary>
+  ///   Execute <paramref name="func" />, which returns a <typeparamref name="TNewSuccess" />, when
+  ///   <paramref name="result" /> is success.
+  ///   Exceptions are caught and returned as a failure. (I.e., simplifies <c>Bind(Try(func))</c>)
+  /// </summary>
+  /// <remarks>
+  ///   <para>
+  ///     Executes <see cref="Bind{TSuccess,TNewSuccess}" />, using <paramref name="func" /> within
+  ///     <see cref="Prelude.Try{A}(System.Func{A})" />.
+  ///   </para>
+  ///   <para>
+  ///     Commonly used to chain steps in a workflow without requiring each function be explicitly wrapped in a
+  ///     <see cref="Prelude.Try{A}(System.Func{A})" />.
+  ///   </para>
+  /// </remarks>
+  /// <param name="result">A <see cref="Result{A}" />.</param>
+  /// <param name="func">
+  ///   A function which accepts a <typeparamref name="TSuccess" /> and returns a <typeparamref name="TNewSuccess" />.
+  /// </param>
+  /// <typeparam name="TSuccess">A success type.</typeparam>
+  /// <typeparam name="TNewSuccess">A new success type.</typeparam>
+  /// <returns>A <see cref="Result{A}" />.</returns>
+  public static Result<TNewSuccess> MapSafe<TSuccess, TNewSuccess>(this Result<TSuccess> result,
+    Func<TSuccess, TNewSuccess> func)
+  {
+    return result.Bind(value => Prelude.Try(() => func(value)).Try());
+  }
+
+  /// <summary>
+  ///   Execute <paramref name="func" />, which returns a <see cref="Task" /> of a <typeparamref name="TNewSuccess" />, when
+  ///   <paramref name="result" /> is success.
+  ///   Exceptions are caught and returned as a failure. (I.e., simplifies <c>BindAsync(TryAsync(func))</c>)
+  /// </summary>
+  /// <remarks>
+  ///   <para>
+  ///     Executes <see cref="Bind{TSuccess,TNewSuccess}" />, using <paramref name="func" /> within
+  ///     <see cref="Prelude.Try{A}(System.Func{A})" />.
+  ///   </para>
+  ///   <para>
+  ///     Commonly used to chain steps in a workflow without requiring each function be explicitly wrapped in a
+  ///     <see cref="Prelude.Try{A}(System.Func{A})" />.
+  ///   </para>
+  /// </remarks>
+  /// <param name="result">A <see cref="Result{A}" />.</param>
+  /// <param name="func">
+  ///   A function which accepts a <typeparamref name="TSuccess" /> and returns a <typeparamref name="TNewSuccess" />.
+  /// </param>
+  /// <typeparam name="TSuccess">A success type.</typeparam>
+  /// <typeparam name="TNewSuccess">A new success type.</typeparam>
+  /// <returns>A <see cref="Result{A}" />.</returns>
+  public static Task<Result<TNewSuccess>> MapSafeAsync<TSuccess, TNewSuccess>(this Result<TSuccess> result,
+    Func<TSuccess, Task<TNewSuccess>> func)
+  {
+    return result.BindAsync(value => Prelude.TryAsync(() => func(value)).Try());
+  }
+
+  /// <summary>
   ///   Execute a side effect and returns <paramref name="result" /> unchanged.
   /// </summary>
   /// <remarks>

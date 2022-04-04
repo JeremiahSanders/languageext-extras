@@ -312,3 +312,6 @@ csharp_style_prefer_switch_expression = true:suggestion
 csharp_style_prefer_pattern_matching = true:suggestion
 csharp_style_prefer_not_pattern = true:suggestion
 csharp_style_prefer_extended_property_pattern = true:suggestion
+
+# CS1591: Missing XML comment for publicly visible type or member 'Type_or_Member'. ONLY OCCURS WHEN DOCUMENTATION IS GENERATED! https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/compiler-messages/cs1591
+dotnet_diagnostic.CS1591.severity = warning

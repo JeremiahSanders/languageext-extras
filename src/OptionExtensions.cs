@@ -2,6 +2,9 @@ using LanguageExt;
 
 namespace Jds.LanguageExt.Extras;
 
+/// <summary>
+///   Extension methods for <see cref="Option{A}" />.
+/// </summary>
 public static class OptionExtensions
 {
   /// <summary>

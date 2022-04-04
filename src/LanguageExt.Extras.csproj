@@ -5,6 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <RootNamespace>Jds.LanguageExt.Extras</RootNamespace>
+    <WarningsAsErrors>CS1591</WarningsAsErrors>
   </PropertyGroup>
   
   <PropertyGroup>

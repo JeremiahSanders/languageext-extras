@@ -1,5 +1,7 @@
 # OptionExtensions class
 
+Extension methods for Option.
+
 ```csharp
 public static class OptionExtensions
 ```

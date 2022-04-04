@@ -19,6 +19,8 @@ public static class ResultExtensions
 | static [IfFailThrow&lt;TSuccess&gt;](ResultExtensions/IfFailThrow.md)(…) | Gets the value of *result*, throwing an InvalidOperationException if it is a failure. |
 | static [MapFailure&lt;TSuccess,TFailure&gt;](ResultExtensions/MapFailure.md)(…) | Converts an existing Exception into a new type, using *func*, if *result* is a failure. |
 | static [MapFailureAsync&lt;TSuccess,TFailure&gt;](ResultExtensions/MapFailureAsync.md)(…) | Asynchronously converts an existing Exception into a new type, using *func*, if *result* is a failure. |
+| static [MapSafe&lt;TSuccess,TNewSuccess&gt;](ResultExtensions/MapSafe.md)(…) | Execute *func*, which returns a *TNewSuccess*, when *result* is success. Exceptions are caught and returned as a failure. (I.e., simplifies `Bind(Try(func))`) |
+| static [MapSafeAsync&lt;TSuccess,TNewSuccess&gt;](ResultExtensions/MapSafeAsync.md)(…) | Execute *func*, which returns a Task of a *TNewSuccess*, when *result* is success. Exceptions are caught and returned as a failure. (I.e., simplifies `BindAsync(TryAsync(func))`) |
 | static [Tap&lt;TSuccess&gt;](ResultExtensions/Tap.md)(…) | Execute a side effect and returns *result* unchanged. |
 | static [TapAsync&lt;TSuccess&gt;](ResultExtensions/TapAsync.md)(…) | Execute an asynchronous side effect and returns *result* unchanged. |
 | static [TapFailure&lt;TSuccess&gt;](ResultExtensions/TapFailure.md)(…) | Execute a side effect when *result* is a failure and returns *result* unchanged. |

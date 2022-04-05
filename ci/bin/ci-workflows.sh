@@ -53,7 +53,14 @@ fi
 # Validate the project's source, e.g. run tests, linting.
 #--
 ci-validate() {
+  # First build performs general linting. Second build, ci-dotnet-build, builds the solution.
+  # Code style validate on build reference: https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/overview#enable-on-build
+  # CS1591 is only generated when documentation file is output. See: https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/compiler-messages/cs1591
   ci-dotnet-restore &&
+    dotnet build "${PROJECT_ROOT}/src" \
+      -p:EnforceCodeStyleInBuild=true \
+      -p:GenerateDocumentationFile=true \
+      -p:TreatWarningsAsErrors=true &&
     ci-dotnet-build &&
     ci-dotnet-test
 }
@@ -62,8 +69,28 @@ ci-validate() {
 # Compose the project's artifacts, e.g., compiled binaries, Docker images.
 #--
 ci-compose() {
-  ci-dotnet-publish &&
-    ci-dotnet-pack
+  function createDocs() {
+    local sourcePath="${BUILD_UNPACKAGED_DIST}/LanguageExt.Extras.dll"
+    local outputPath="${BUILD_DOCS}/md"
+    xmldocmd "${sourcePath}" "${outputPath}" \
+      --namespace "Jds.LanguageExt.Extras" \
+      --source "https://github.com/JeremiahSanders/languageext-extras/tree/main/src" \
+      --newline lf \
+      --visibility public
+  }
+  ci-dotnet-publish \
+    -p:GenerateDocumentationFile=true &&
+    ci-dotnet-pack \
+      -p:GenerateDocumentationFile=true &&
+    createDocs
+}
+
+regenerate-docs() {
+  if [[ ! -d "${PROJECT_ROOT}/docs/api" ]]; then
+    mkdir "${PROJECT_ROOT}/docs/api"
+  fi
+  ci-compose &&
+    cp -R "${BUILD_DOCS}/md/." "${PROJECT_ROOT}/docs/api/"
 }
 
 #--

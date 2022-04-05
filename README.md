@@ -99,6 +99,10 @@ using Jds.LanguageExt.Extras;
   * Executes `func`, which returns an `Exception`, when the result is a failure.
 * `Result<TSuccess>.MapFailureAsync<TSuccess, TFailure>(Func<Exception, Task<TFailure>> func) where TFailure : Exception`
   * Executes `func`, which returns a `Task<Exception>`, when the result is a failure.
+* `Result<TSuccess>.MapSafe<TSuccess, TNewSuccess>(Func<TSuccess, TNewSuccess> func)`
+  * Executes `func`, which returns `TNewSuccess`, when the result is a success. Exceptions are caught and returned as a failure. (I.e., this simplifies `result.Bind(value => Prelude.Try(() => func(value)).Try())`)
+* `Result<TSuccess>.MapSafeAsync<TSuccess, TNewSuccess>(Func<TSuccess, Task<TNewSuccess>> func)`
+  * Executes `func`, which returns `Task<TNewSuccess>`, when the result is a success. Exceptions are caught and returned as a failure. (I.e., this simplifies `result.BindAsync(value => Prelude.TryAsync(() => func(value)).Try())`)
 * `Result<TSuccess>.Tap<TSuccess>(Action<TSuccess> onSuccess, Action<Exception> onFailure)`
   * Executes a side effect, e.g., logging, based upon the state of the result. The current value is returned unchanged.
 * `Result<TSuccess>.TapAsync<TSuccess>(Func<TSuccess, Task> onSuccess, Func<Exception, Task> onFailure)`

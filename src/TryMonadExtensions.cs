@@ -40,4 +40,80 @@ public static class TryMonadExtensions
       return result.IsFaulted ? result : result.Filter(filter, onFalse).IfFail(Prelude.raise<TSuccess>);
     });
   }
+
+  /// <summary>
+  ///   Execute a side effect and returns <paramref name="tryDelegate" /> result unchanged.
+  /// </summary>
+  /// <remarks>
+  ///   Often used to perform logging.
+  /// </remarks>
+  /// <typeparam name="TSuccess">A success type.</typeparam>
+  /// <param name="tryDelegate">A <see cref="Try{A}" />.</param>
+  /// <param name="onSuccess">A side-effect for success cases.</param>
+  /// <param name="onFailure">A side-effect for failure cases.</param>
+  /// <returns>
+  ///   <paramref name="tryDelegate" />
+  /// </returns>
+  public static Try<TSuccess> Tap<TSuccess>(
+    this Try<TSuccess> tryDelegate,
+    Action<TSuccess> onSuccess,
+    Action<Exception> onFailure
+  )
+  {
+    return Prelude.Try(() =>
+    {
+      var result = tryDelegate.Try();
+      return result.Tap(onSuccess, onFailure).IfFail(Prelude.raise<TSuccess>);
+    });
+  }
+
+  /// <summary>
+  ///   Execute a side effect when <paramref name="tryDelegate" /> is a success and returns <paramref name="tryDelegate" />
+  ///   result unchanged.
+  /// </summary>
+  /// <remarks>
+  ///   Often used to perform logging.
+  /// </remarks>
+  /// <typeparam name="TSuccess">A success type.</typeparam>
+  /// <param name="tryDelegate">A <see cref="Try{A}" />.</param>
+  /// <param name="onSuccess">A side-effect for success cases.</param>
+  /// <returns>
+  ///   <paramref name="tryDelegate" />
+  /// </returns>
+  public static Try<TSuccess> TapSuccess<TSuccess>(
+    this Try<TSuccess> tryDelegate,
+    Action<TSuccess> onSuccess
+  )
+  {
+    return Prelude.Try(() =>
+    {
+      var result = tryDelegate.Try();
+      return result.TapSuccess(onSuccess).IfFail(Prelude.raise<TSuccess>);
+    });
+  }
+
+  /// <summary>
+  ///   Execute a side effect when <paramref name="tryDelegate" /> is a failure and returns
+  ///   <paramref name="tryDelegate" /> result unchanged.
+  /// </summary>
+  /// <remarks>
+  ///   Often used to perform logging.
+  /// </remarks>
+  /// <typeparam name="TSuccess">A success type.</typeparam>
+  /// <param name="tryDelegate">A <see cref="Try{A}" />.</param>
+  /// <param name="onFailure">A side-effect for failure cases.</param>
+  /// <returns>
+  ///   <paramref name="tryDelegate" />
+  /// </returns>
+  public static Try<TSuccess> TapFailure<TSuccess>(
+    this Try<TSuccess> tryDelegate,
+    Action<Exception> onFailure
+  )
+  {
+    return Prelude.Try(() =>
+    {
+      var result = tryDelegate.Try();
+      return result.TapFailure(onFailure).IfFail(Prelude.raise<TSuccess>);
+    });
+  }
 }

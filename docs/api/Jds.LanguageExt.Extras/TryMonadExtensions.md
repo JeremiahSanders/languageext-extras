@@ -11,6 +11,9 @@ public static class TryMonadExtensions
 | name | description |
 | --- | --- |
 | static [Filter&lt;TSuccess&gt;](TryMonadExtensions/Filter.md)(…) | Returns a Try which filters the result of *tryDelegate*. When *filter* returns `false`, *onFalse* creates the failure result. |
+| static [Tap&lt;TSuccess&gt;](TryMonadExtensions/Tap.md)(…) | Execute a side effect and returns *tryDelegate* result unchanged. |
+| static [TapFailure&lt;TSuccess&gt;](TryMonadExtensions/TapFailure.md)(…) | Execute a side effect when *tryDelegate* is a failure and returns *tryDelegate* result unchanged. |
+| static [TapSuccess&lt;TSuccess&gt;](TryMonadExtensions/TapSuccess.md)(…) | Execute a side effect when *tryDelegate* is a success and returns *tryDelegate* result unchanged. |
 
 ## See Also
 

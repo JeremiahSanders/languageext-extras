@@ -121,6 +121,39 @@ using Jds.LanguageExt.Extras;
 * `Result<TSuccess>.ToEither<TSuccess>()`
   * Converts the `Result<TSuccess>` into an `Either<Exception, TSuccess>`.
 
+### `Try<TSuccess>` Extensions
+
+* `Try<TSuccess>.Filter<TSuccess>(Func<TSuccess, bool> filter, Func<TSuccess, Exception> onFalse)`
+  * Filters `TSuccess` results by executing `filter`. If it returns `true`, the existing value is returned. If it returns `false`, then it executes `onFalse` to create an `Exception`. Memoizes successful results.
+* `Try<TSuccess>.Tap<TSuccess>(Action<TSuccess> onSuccess, Action<Exception> onFailure)`
+  * Executes a side effect, e.g., logging, based upon the state of the result. The current value is returned unchanged.
+* `Try<TSuccess>.TapFailure<TSuccess>(Action<Exception> onFailure)`
+  * Executes a side effect, e.g., logging, when the result is a failure. The current value is returned unchanged.
+* `Try<TSuccess>.TapSuccess<TSuccess>(Action<TSuccess> onSuccess)`
+  * Executes a side effect, e.g., logging, when the result is a success. The current value is returned unchanged.
+
+### `TryAsync<TSuccess>` Extensions
+
+* `TryAsync<TSuccess>.Filter<TSuccess>(Func<TSuccess, bool> filter, Func<TSuccess, Exception> onFalse)`
+  * Filters `TSuccess` results by executing `filter`. If it returns `true`, the existing value is returned. If it returns `false`, then it executes `onFalse` to create an `Exception`. Memoizes successful results.
+* `TryAsync<TSuccess>.FilterAsync<TSuccess>(Func<TSuccess, Task<bool>> filter, Func<TSuccess, Exception> onFalse)`
+  * Filters `TSuccess` results by executing `filter`. If it returns `true`, the existing value is returned. If it returns `false`, then it executes `onFalse` to create an `Exception`. Memoizes successful results.
+* `TryAsync<TSuccess>.Tap<TSuccess>(Action<TSuccess> onSuccess, Action<Exception> onFailure)`
+  * Executes a side effect, e.g., logging, based upon the state of the result. The current value is returned unchanged.
+* `TryAsync<TSuccess>.Tap<TSuccess>(Func<TSuccess, Task> onSuccess, Func<Exception, Task> onFailure)`
+  * Executes an asynchronous side effect, e.g., dispatching a status notification via `HttpClient`, based upon the state
+    of the result. The current value is returned unchanged.
+* `TryAsync<TSuccess>.TapFailure<TSuccess>(Action<Exception> onFailure)`
+  * Executes a side effect, e.g., logging, when the result is a failure. The current value is returned unchanged.
+* `TryAsync<TSuccess>.TapFailure<TSuccess>(Func<Exception, Task> onFailure)`
+  * Executes an asynchronous side effect, e.g., dispatching a status notification via `HttpClient`, when the result is a
+    failure. The current value is returned unchanged.
+* `TryAsync<TSuccess>.TapSuccess<TSuccess>(Action<TSuccess> onSuccess)`
+  * Executes a side effect, e.g., logging, when the result is a success. The current value is returned unchanged.
+* `TryAsync<TSuccess>.TapSuccess<TSuccess>(Func<TSuccess, Task> onSuccess)`
+  * Executes an asynchronous side effect, e.g., dispatching a status notification via `HttpClient`, when the result is a
+    success. The current value is returned unchanged.
+
 [LanguageExt]: https://github.com/louthy/language-ext
 
 [LanguageExt license]: https://github.com/louthy/language-ext/blob/main/LICENSE.md

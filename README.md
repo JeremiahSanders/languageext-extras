@@ -121,6 +121,18 @@ using Jds.LanguageExt.Extras;
 * `Result<TSuccess>.ToEither<TSuccess>()`
   * Converts the `Result<TSuccess>` into an `Either<Exception, TSuccess>`.
 
+### `Try<TSuccess>` Extensions
+
+* `Try<TSuccess>.Filter<TSuccess>(Func<TSuccess, bool> filter, Func<TSuccess, Exception> onFalse)`
+  * Filters `TSuccess` results by executing `filter`. If it returns `true`, the existing value is returned. If it returns `false`, then it executes `onFalse` to create an `Exception`. Memoizes successful results.
+
+### `TryAsync<TSuccess>` Extensions
+
+* `TryAsync<TSuccess>.Filter<TSuccess>(Func<TSuccess, bool> filter, Func<TSuccess, Exception> onFalse)`
+  * Filters `TSuccess` results by executing `filter`. If it returns `true`, the existing value is returned. If it returns `false`, then it executes `onFalse` to create an `Exception`. Memoizes successful results.
+* `TryAsync<TSuccess>.FilterAsync<TSuccess>(Func<TSuccess, Task<bool>> filter, Func<TSuccess, Exception> onFalse)`
+  * Filters `TSuccess` results by executing `filter`. If it returns `true`, the existing value is returned. If it returns `false`, then it executes `onFalse` to create an `Exception`. Memoizes successful results.
+
 [LanguageExt]: https://github.com/louthy/language-ext
 
 [LanguageExt license]: https://github.com/louthy/language-ext/blob/main/LICENSE.md

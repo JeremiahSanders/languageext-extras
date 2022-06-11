@@ -39,7 +39,7 @@ public static class HttpResponseMessageExtensions
   {
     return Prelude.TryAsync(async () =>
       await message.Content.ReadFromJsonAsync<T>(options, cancellationToken) ??
-      throw new JsonException("Failed to deserialize JSON")
+      Prelude.raise<T>(new JsonException("Failed to deserialize JSON"))
     );
   }
 }

@@ -23,25 +23,6 @@ public class IfFailThrowTests
     var exception = new OverflowException();
     var result = new Result<int>(exception);
 
-    Assert.Throws<InvalidOperationException>(() => result.IfFailThrow());
-  }
-
-  [Fact]
-  public void ContainsThrownExceptionAsInnerException()
-  {
-    var exception = new OverflowException();
-    var result = new Result<int>(exception);
-
-    Exception? innerException = null;
-    try
-    {
-      _ = result.IfFailThrow();
-    }
-    catch (Exception ex)
-    {
-      innerException = ex.InnerException;
-    }
-
-    Assert.Equal(exception, innerException);
+    Assert.Throws<OverflowException>(() => result.IfFailThrow());
   }
 }

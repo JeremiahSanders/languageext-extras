@@ -19,7 +19,7 @@ The success value in *result*.
 
 | exception | condition |
 | --- | --- |
-| InvalidOperationException | Thrown when *result* is a failure. The failure Exception will be the InnerException. |
+| BottomException | Thrown when *result* is in a Bottom state. |
 
 ## Remarks
 

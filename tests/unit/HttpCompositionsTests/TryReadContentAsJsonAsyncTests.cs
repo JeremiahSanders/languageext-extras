@@ -4,7 +4,7 @@ using System.Text.Json;
 
 using Xunit;
 
-namespace Jds.LanguageExt.Extras.Tests.Unit.HttpResponseMessageExtensionsTests;
+namespace Jds.LanguageExt.Extras.Tests.Unit.HttpCompositionsTests;
 
 public class TryReadContentAsJsonAsyncTests
 {
@@ -13,7 +13,7 @@ public class TryReadContentAsJsonAsyncTests
 
   public TryReadContentAsJsonAsyncTests()
   {
-    JsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+    JsonSerializerOptions = new JsonSerializerOptions {PropertyNamingPolicy = JsonNamingPolicy.CamelCase};
   }
 
   private JsonSerializerOptions JsonSerializerOptions { get; }
@@ -22,8 +22,8 @@ public class TryReadContentAsJsonAsyncTests
   public async Task GivenStringResponse_ReturnsString()
   {
     using HttpContent httpContent = new StringContent(SourceText, Encoding.UTF8);
-    using var message = new HttpResponseMessage(HttpStatusCode.OK) { Content = httpContent };
-    var expected = new TestType { Value = expectedValue };
+    using var message = new HttpResponseMessage(HttpStatusCode.OK) {Content = httpContent};
+    var expected = new TestType {Value = expectedValue};
 
     var (actualMessage, contentResult, bodyResult) =
       await message.TryReadContentAsJsonAsync<TestType>(JsonSerializerOptions);
@@ -39,7 +39,7 @@ public class TryReadContentAsJsonAsyncTests
   public async Task GivenInfrastructureFailure_ReturnsException()
   {
     using HttpContent content = new StringContent(SourceText, Encoding.UTF8);
-    using var message = new HttpResponseMessage(HttpStatusCode.OK) { Content = content };
+    using var message = new HttpResponseMessage(HttpStatusCode.OK) {Content = content};
     CancellationTokenSource source = new();
     source.Cancel(); // Use a canceled token to force a failure.
 

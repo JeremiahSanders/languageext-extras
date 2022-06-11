@@ -1,28 +1,33 @@
 using System.Net;
 using System.Text.Json;
 
+using Jds.LanguageExt.Extras.Tests.Unit.HttpClientExtensionsTests;
+
+using LanguageExt;
+
 using Xunit;
 
-namespace Jds.LanguageExt.Extras.Tests.Unit.HttpClientExtensionsTests;
+namespace Jds.LanguageExt.Extras.Tests.Unit.HttpCompositionsTests;
 
-public class TryPostAsyncTests
+public class TryPostForJsonAsyncTests
 {
   [Fact]
   public async Task ExecutesPost()
   {
     const string Url = "https://not-real/thing";
-    var arrangedObject = new {value = 42};
+    var arrangedObject = new ExampleResponseObject {Value = 42};
     var expectedRequest = new {id = "abc"};
-    var expectedJson = JsonSerializer.Serialize(arrangedObject);
     var arrangedPostUri = new Uri(Url, UriKind.Absolute);
     using var client = GetClient(arrangedPostUri, expectedRequest, arrangedObject);
 
-    var actual = await client
-      .TryPostAsync(arrangedPostUri, new StringContent(JsonSerializer.Serialize(expectedRequest)))
-      .Bind(response => response.TryReadContentAsStringAsync())
-      .Try();
+    var actual = (await client
+        .TryPostForJsonAsync<ExampleResponseObject>(arrangedPostUri,
+          new StringContent(JsonSerializer.Serialize(expectedRequest)))
+        .Map(result => result.Body.IfFail(Prelude.raise<ExampleResponseObject>))
+        .Try())
+      .IfFailThrow();
 
-    Assert.Equal(expectedJson, actual);
+    Assert.Equal(arrangedObject, actual);
   }
 
   private static HttpClient GetClient<TRequest, TResponse>(Uri postRoute, TRequest expectedBody,

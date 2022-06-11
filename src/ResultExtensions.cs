@@ -1,3 +1,5 @@
+using System.Diagnostics.Contracts;
+
 using LanguageExt;
 using LanguageExt.Common;
 
@@ -187,13 +189,13 @@ public static class ResultExtensions
   /// <typeparam name="TSuccess">A success type.</typeparam>
   /// <param name="result">A <see cref="Result{A}" />.</param>
   /// <returns>The success value in <paramref name="result" />.</returns>
-  /// <exception cref="InvalidOperationException">
-  ///   Thrown when <paramref name="result" /> is a failure. The failure
-  ///   <see cref="Exception" /> will be the <see cref="Exception.InnerException" />.
+  /// <exception cref="BottomException">
+  ///   Thrown when <paramref name="result" /> is in a <see cref="Result{A}.Bottom" /> state.
   /// </exception>
+  [Pure]
   public static TSuccess IfFailThrow<TSuccess>(this Result<TSuccess> result)
   {
-    return result.IfFail(exception => throw new InvalidOperationException("Result was a failure.", exception));
+    return result.IfFail(Prelude.raise<TSuccess>);
   }
 
   /// <summary>

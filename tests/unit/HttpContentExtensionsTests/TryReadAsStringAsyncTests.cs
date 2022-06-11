@@ -14,7 +14,7 @@ public class TryReadAsStringAsyncTests
     using HttpContent content = new StringContent(SourceText, Encoding.UTF8);
     var expected = SourceText;
 
-    var actual = (await content.TryReadAsStringAsync()).IfFailThrow();
+    var actual = (await content.TryReadAsStringAsync().Try()).IfFailThrow();
 
     Assert.Equal(expected, actual);
   }
@@ -26,7 +26,7 @@ public class TryReadAsStringAsyncTests
     CancellationTokenSource source = new();
     source.Cancel(); // Use a canceled token to force a failure.
 
-    var actual = await content.TryReadAsStringAsync(source.Token);
+    var actual = await content.TryReadAsStringAsync(source.Token).Try();
 
     Assert.True(actual.IsFaulted);
   }

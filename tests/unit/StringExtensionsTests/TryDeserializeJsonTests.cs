@@ -25,7 +25,7 @@ public class TryDeserializeJsonTests
     var expectedExceptionType = typeof(JsonException);
     Type? thrownExceptionType = null;
 
-    var result = nonJson.TryDeserializeJson<ExampleJson>(JsonSerializerOptions);
+    var result = nonJson.TryDeserializeJson<ExampleJson>(JsonSerializerOptions).Try();
     result.IfFail(exception => thrownExceptionType = exception.GetType());
 
     Assert.Equal(expectedExceptionType, thrownExceptionType);

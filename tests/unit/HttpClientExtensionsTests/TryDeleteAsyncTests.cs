@@ -16,7 +16,7 @@ public class TryDeleteAsyncTests
     using var client = GetClient(arrangedDeleteUri);
     var expected = new Result<HttpStatusCode>(HttpStatusCode.NoContent);
 
-    var actual = (await client.TryDeleteAsync(arrangedDeleteUri)).Map(response => response.StatusCode);
+    var actual = await client.TryDeleteAsync(arrangedDeleteUri).Map(response => response.StatusCode).Try();
 
     Assert.Equal(expected, actual);
   }

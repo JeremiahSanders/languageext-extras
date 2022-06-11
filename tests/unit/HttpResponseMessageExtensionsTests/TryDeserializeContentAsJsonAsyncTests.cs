@@ -38,7 +38,7 @@ public class TryDeserializeContentAsJsonAsyncTests
     CancellationTokenSource source = new();
     source.Cancel(); // Use a canceled token to force a failure.
 
-    var actual = await message.TryDeserializeContentAsJsonAsync<TestType>(JsonSerializerOptions, source.Token);
+    var actual = await message.TryDeserializeContentAsJsonAsync<TestType>(JsonSerializerOptions, source.Token).Try();
 
     Assert.True(actual.IsFaulted);
   }

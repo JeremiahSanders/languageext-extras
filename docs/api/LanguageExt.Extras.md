@@ -4,7 +4,12 @@
 
 | public type | description |
 | --- | --- |
+| record [DeserializedHttpResponseMessage&lt;TBody&gt;](./Jds.LanguageExt.Extras/DeserializedHttpResponseMessage-1.md) | A tuple of a HttpResponseMessage, a Result of reading the Content as a String, and a Result of deserializing the Content as *TBody*. |
 | static class [EitherExtensions](./Jds.LanguageExt.Extras/EitherExtensions.md) | Extension methods for Either. |
+| static class [HttpClientExtensions](./Jds.LanguageExt.Extras/HttpClientExtensions.md) | Methods extending HttpClient. |
+| static class [HttpCompositions](./Jds.LanguageExt.Extras/HttpCompositions.md) | Methods composing HTTP message and request operations into workflows. |
+| static class [HttpContentExtensions](./Jds.LanguageExt.Extras/HttpContentExtensions.md) | Methods extending HttpContent. |
+| static class [HttpResponseMessageExtensions](./Jds.LanguageExt.Extras/HttpResponseMessageExtensions.md) | Methods extending HttpResponseMessage. |
 | static class [OptionExtensions](./Jds.LanguageExt.Extras/OptionExtensions.md) | Extension methods for Option. |
 | static class [ResultExtensions](./Jds.LanguageExt.Extras/ResultExtensions.md) | Extension methods for Result. |
 | static class [TryAsyncMonadExtensions](./Jds.LanguageExt.Extras/TryAsyncMonadExtensions.md) | Methods extending TryAsync which filter results. |

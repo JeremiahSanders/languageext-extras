@@ -154,6 +154,46 @@ using Jds.LanguageExt.Extras;
   * Executes an asynchronous side effect, e.g., dispatching a status notification via `HttpClient`, when the result is a
     success. The current value is returned unchanged.
 
+## `HttpClient` / Web API Helpers
+
+### `HttpClient` Extensions
+
+* `HttpClient.TryDeleteAsync(Uri? uri, CancellationToken cancellationToken = default)`
+  * Tries to asynchronously execute `.DeleteAsync()`, returning a `TryAsync<HttpResponseMessage>`.
+* `HttpClient.TryGetAsync(Uri? uri, HttpCompletionOption completionOption, CancellationToken cancellationToken = default)`
+* `HttpClient.TryGetAsync(Uri? uri, CancellationToken cancellationToken = default)`
+  * Tries to asynchronously execute `.GetAsync()`, returning a `TryAsync<HttpResponseMessage>`.
+* `HttpClient.TryGetForJsonAsync(Uri? uri, JsonSerializerOptions? jsonSerializerOptions = null, CancellationToken cancellationToken = default)`
+  * Tries to asynchronously execute `.GetAsync()` and deserialize the response body as JSON, returning a `TryAsync<DeserializedHttpResponseMessage<T>>`.
+* `HttpClient.TryPostAsync(Uri? uri, HttpContent? content, CancellationToken cancellationToken = default)`
+  * Tries to asynchronously execute `.PostAsync()`, returning a `TryAsync<HttpResponseMessage>`.
+* `HttpClient.TryPostForJsonAsync(Uri? uri, HttpContent? content, JsonSerializerOptions? jsonSerializerOptions = null, CancellationToken cancellationToken = default)`
+  * Tries to asynchronously execute `.PostAsync()` and deserialize the response body as JSON, returning a `TryAsync<DeserializedHttpResponseMessage<T>>`.
+* `HttpClient.TryPutAsync(Uri? uri, HttpContent? content, CancellationToken cancellationToken = default)`
+  * Tries to asynchronously execute `.PutAsync()`, returning a `TryAsync<HttpResponseMessage>`.
+* `HttpClient.TryPutForJsonAsync<T>(Uri? uri, HttpContent? content, JsonSerializerOptions? jsonSerializerOptions = null, CancellationToken cancellationToken = default)`
+  * Tries to asynchronously execute `.PutAsync()` and deserialize the response body as JSON, returning a `TryAsync<DeserializedHttpResponseMessage<T>>`.
+* `HttpClient.TrySendAsync(HttpRequestMessage requestMessage, HttpCompletionOption completionOption, CancellationToken cancellationToken = default)`
+* `HttpClient.TrySendAsync(HttpRequestMessage requestMessage, CancellationToken cancellationToken = default)`
+  * Tries to asynchronously execute `.SendAsync()`, returning a `TryAsync<HttpResponseMessage>`.
+* `HttpClient.TrySendForJsonAsync<T>(HttpRequestMessage requestMessage, JsonSerializerOptions? jsonSerializerOptions = null, CancellationToken cancellationToken = default)`
+  * Tries to asynchronously execute `.SendAsync()` and deserialize the response body as JSON, returning a `TryAsync<DeserializedHttpResponseMessage<T>>`.
+
+### `HttpContent` Extensions
+
+* `HttpContent.TryReadAsStringAsync(CancellationToken cancellationToken = default)`
+  * Tries to asynchronously read the `HttpContent` as a `string`, returning a `TryAsync<string>`
+
+### `HttpResponseMessage` Extensions
+
+* `HttpResponseMessage.TryReadContentAsStringAsync(CancellationToken cancellationToken = default)`
+  * Tries to asynchronously read the message's `.Content` as a `string`, returning a `TryAsync<string>`.
+* `HttpResponseMessage.TryDeserializeContentAsJsonAsync<T>(JsonSerializerOptions? options = null, CancellationToken cancellationToken = default) where T : notnull`
+  * Tries to asynchronously read the message's `.Content` as a JSON `string` and deserialize it as `T`, returning a `TryAsync<T>`.
+* `HttpResponseMessage.TryReadContentAsJsonAsync<T>(JsonSerializerOptions? jsonSerializerOptions = null, CancellationToken cancellationToken = default) where T : notnull`
+  * Tries to asynchronously read the message's `.Content` as a JSON `string` and deserialize it as `T`, returning all components, `TryAsync<(HttpResponseMessage Message, Result<string> Content, Result<T> Body)>`.
+  * This method is extremely useful in ASP.NET integration tests. It succinctly parses API responses and maintains full access to the `HttpResponseMessage` and any `Exception`s, supporting thorough testing of success and failure paths.
+
 [LanguageExt]: https://github.com/louthy/language-ext
 
 [LanguageExt license]: https://github.com/louthy/language-ext/blob/main/LICENSE.md

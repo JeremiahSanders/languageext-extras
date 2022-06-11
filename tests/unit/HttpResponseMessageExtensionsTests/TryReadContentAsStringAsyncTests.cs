@@ -29,7 +29,7 @@ public class TryReadContentAsStringAsyncTests
     CancellationTokenSource source = new();
     source.Cancel(); // Use a canceled token to force a failure.
 
-    var actual = await message.TryReadContentAsStringAsync(source.Token);
+    var actual = await message.TryReadContentAsStringAsync(source.Token).Try();
 
     Assert.True(actual.IsFaulted);
   }

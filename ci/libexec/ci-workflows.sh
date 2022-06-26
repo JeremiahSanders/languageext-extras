@@ -7,7 +7,7 @@
 #
 # How to use:
 #   Update the "workflow compositions" in this file to perform each of the named continuous integration tasks.
-#   Add additional workflow functions as needed. Note: Functions must be executed
+#   Add additional workflow functions as needed. Note: Functions must be executed to affect CI process.
 ###
 
 set -o errexit  # Fail or exit immediately if there is an error.
@@ -85,6 +85,13 @@ ci-compose() {
     createDocs
 }
 
+#--
+# Publish the project's artifact composition.
+#--
+ci-publish() {
+  ci-dotnet-nuget-push
+}
+
 regenerate-docs() {
   if [[ ! -d "${PROJECT_ROOT}/docs/api" ]]; then
     mkdir "${PROJECT_ROOT}/docs/api"
@@ -93,16 +100,10 @@ regenerate-docs() {
     cp -R "${BUILD_DOCS}/md/." "${PROJECT_ROOT}/docs/api/"
 }
 
-#--
-# Publish the project's artifact composition.
-#--
-ci-publish() {
-  ci-dotnet-nuget-push
-}
-
 export -f ci-compose
 export -f ci-publish
 export -f ci-validate
+export -f regenerate-docs
 
 ####
 # END Workflow Compositions

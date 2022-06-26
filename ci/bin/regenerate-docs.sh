@@ -24,7 +24,7 @@ __initialize() {
   fi
   # Load project CI workflow library.
   # Then execute the ci-env-init, ci-env-display, and ci-env-require functions, provided by the CICEE action library.
-  source "${SCRIPT_LOCATION}/ci-workflows.sh" &&
+  source "${PROJECT_ROOT}/ci/libexec/ci-workflows.sh" &&
     ci-env-init &&
     ci-env-display &&
     ci-env-require

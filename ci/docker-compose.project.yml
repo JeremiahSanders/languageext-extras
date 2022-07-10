@@ -19,3 +19,9 @@ services:
       NUGET_SOURCE:
     # NOTE: Root user specified below helps address permissions errors when using the default CICEE Dockerfile.
     user: root
+    volumes:
+      # Volumes below prevent collisions between working directory dependencies across architectures/OSes (local vs docker-compose).
+      - /code/src/bin/
+      - /code/src/obj/
+      - /code/tests/unit/bin/
+      - /code/tests/unit/obj/

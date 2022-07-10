@@ -2,7 +2,10 @@
 # shellcheck disable=SC2155
 
 ###
-# Regenerate the project's API documentation.
+# Build and validate the project's source.
+#
+# How to use:
+#   Customize the "ci-validate" and "ci-compose" workflows (functions) defined in ci/libexec/workflows/.
 ###
 
 set -o errexit  # Fail or exit immediately if there is an error.
@@ -12,25 +15,21 @@ set -o pipefail # Fail pipelines if any command errors, not just the last one.
 declare SCRIPT_LOCATION="$(dirname "${BASH_SOURCE[0]}")"
 declare PROJECT_ROOT="${PROJECT_ROOT:-$(cd "${SCRIPT_LOCATION}/../.." && pwd)}"
 
-__initialize() {
-  # Load the CICEE continuous integration action library (local copy, by 'cicee lib', or by the specific location CICEE mounts it to).
-  if [[ -d "${PROJECT_ROOT}/ci/lib/ci/bash" ]]; then
-    source "${PROJECT_ROOT}/ci/lib/ci/bash/ci.sh" && printf "Loaded local CI lib: ${PROJECT_ROOT}/ci/lib\n"
-  elif [[ -n "$(command -v cicee)" ]]; then
-    source "$(cicee lib)" && printf "Loaded CICEE's CI lib.\n"
-  else
-    # CICEE mounts the Bash CI action library at /opt/ci-lib/bash/ci.sh.
-    source "/opt/ci-lib/bash/ci.sh" && printf "Loaded CICEE's mounted CI lib.\n"
-  fi
-  # Load project CI workflow library.
-  # Then execute the ci-env-init, ci-env-display, and ci-env-require functions, provided by the CICEE action library.
-  source "${PROJECT_ROOT}/ci/libexec/ci-workflows.sh" &&
-    ci-env-init &&
-    ci-env-display &&
-    ci-env-require
-}
+if [[ -z "$(command -v cicee)" ]]; then
+  # Install CICEE, to add the CI shell library.
+  dotnet tool install -g cicee
+else
+  # Ensure we're using the latest CI shell library scripts.
+  dotnet tool update -g cicee
+fi
 
-# Execute the initialization function, defined above, and ci-compose function, defined in ci-workflows.sh.
+#--
+# Use 'cicee lib exec' to run our validation workflow and perform a dry-run output composition.
+#   All .sh scripts in ci/libexec/workflows/ are sourced by CICEE's library.
+#   Below we only need to execute the workflow Bash shell functions.
+#--
+cicee lib exec --project-root "${PROJECT_ROOT}" --command "regenerate-docs"
+
 __initialize &&
   printf "Beginning document regeneration...\n\n" &&
   regenerate-docs &&

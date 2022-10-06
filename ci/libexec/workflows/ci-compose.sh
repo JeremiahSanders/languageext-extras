@@ -20,14 +20,17 @@ function ci-compose() {
   printf "Composing build artifacts...\n\n"
   
   function createDocs() {
+    cd "${PROJECT_ROOT}"
+    dotnet tool restore
     local sourcePath="${BUILD_UNPACKAGED_DIST}/LanguageExt.Extras.dll"
     local outputPath="${BUILD_DOCS}/md"
-    xmldocmd "${sourcePath}" "${outputPath}" \
+    dotnet xmldocmd "${sourcePath}" "${outputPath}" \
       --namespace "Jds.LanguageExt.Extras" \
       --source "https://github.com/JeremiahSanders/languageext-extras/tree/main/src" \
       --newline lf \
       --visibility public
   }
+
   ci-dotnet-publish \
     -p:GenerateDocumentationFile=true &&
     ci-dotnet-pack \

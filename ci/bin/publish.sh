@@ -5,7 +5,7 @@
 # Build and publish the project's artifact composition.
 #
 # How to use:
-#   Customize the "ci-compose" and "ci-publish" workflows (functions) defined in ci-workflows.sh.
+#   Customize the "ci-compose" and "ci-publish" workflows (functions) defined in ci/libexec/workflows/.
 ###
 
 set -o errexit  # Fail or exit immediately if there is an error.
@@ -15,29 +15,21 @@ set -o pipefail # Fail pipelines if any command errors, not just the last one.
 declare SCRIPT_LOCATION="$(dirname "${BASH_SOURCE[0]}")"
 declare PROJECT_ROOT="${PROJECT_ROOT:-$(cd "${SCRIPT_LOCATION}/../.." && pwd)}"
 
-__initialize() {
-  # Load the CICEE continuous integration action library (local copy, by 'cicee lib', or by the specific location CICEE mounts it to).
-  if [[ -d "${PROJECT_ROOT}/ci/lib/ci/bash" ]]; then
-    source "${PROJECT_ROOT}/ci/lib/ci/bash/ci.sh" && printf "Loaded local CI lib: ${PROJECT_ROOT}/ci/lib\n"
-  elif [[ -n "$(command -v cicee)" ]]; then
-    source "$(cicee lib)" && printf "Loaded CICEE's CI lib.\n"
-  else
-    # CICEE mounts the Bash CI action library at /opt/ci-lib/bash/ci.sh.
-    source "/opt/ci-lib/bash/ci.sh" && printf "Loaded CICEE's mounted CI lib.\n"
-  fi
-  # Load project CI workflow library.
-  # Then execute the ci-env-init, ci-env-display, and ci-env-require functions, provided by the CICEE action library.
-  source "${SCRIPT_LOCATION}/ci-workflows.sh" &&
-    ci-env-init &&
-    ci-env-display &&
-    ci-env-require
-}
+# Check to see if a .NET local tool manifest exists and references cicee.
+if [[ -z "$(dotnet tool list | grep cicee)" ]]; then
+  # Create a .NET local tool manifest, if it doesn't exist.
+  dotnet new tool-manifest --output "${PROJECT_ROOT}"
+  # Install CICEE, to add the CI shell library.
+  dotnet tool install --local cicee || echo -e "\nFailed to install CICEE.\n  Unexpected errors may occur.\n\n"
+else
+  # We have cicee installed locally.
+  # Ensure we're using the latest CI shell library scripts.
+  dotnet tool update --local cicee || echo -e "\nFailed to update CICEE.\n  Unexpected errors may occur.\n  Current CICEE version: $(dotnet cicee --version)\n\n"
+fi
 
-# Execute the initialization function, defined above, and ci-compose and ci-publish functions, defined in ci-workflows.sh.
-__initialize &&
-  printf "Composing build artifacts...\n\n" &&
-  ci-compose &&
-  printf "Composition complete.\n" &&
-  printf "Publishing composed artifacts...\n\n" &&
-  ci-publish &&
-  printf "Publishing complete.\n\n"
+#--
+# Use 'dotnet cicee lib exec' to run our output composition and publish workflows.
+#   All .sh scripts in ci/libexec/workflows/ are sourced by CICEE's library.
+#   Below we only need to execute the workflow Bash shell functions (in ci/libexec/workflows/).
+#--
+dotnet cicee lib exec --project-root "${PROJECT_ROOT}" --command "ci-compose \&\& ci-publish"

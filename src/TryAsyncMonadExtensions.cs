@@ -76,6 +76,53 @@ public static class TryAsyncMonadExtensions
   }
 
   /// <summary>
+  ///   Returns a <see cref="TryAsync{A}" /> which filters the result of <paramref name="tryAsync" /> based upon whether
+  ///   the provided <paramref name="cancellationToken" /> is canceled (via
+  ///   <see cref="System.Threading.CancellationToken.IsCancellationRequested" />).
+  /// </summary>
+  /// <param name="tryAsync">A <see cref="TryAsync{A}" />.</param>
+  /// <param name="ifCanceled">
+  ///   A function which will provide the cancellation <see cref="Exception" /> when
+  ///   <see cref="System.Threading.CancellationToken.IsCancellationRequested" /> returns <c>true</c>.
+  /// </param>
+  /// <param name="cancellationToken">An asynchronous operation cancellation token.</param>
+  /// <typeparam name="TSuccess">A success type.</typeparam>
+  /// <returns>
+  ///   A <see cref="TryAsync{A}" />.
+  ///   If <paramref name="cancellationToken" /> is not canceled: current <typeparamref name="TSuccess" /> is returned.
+  ///   If canceled: the converted <see cref="Exception" /> (from <paramref name="ifCanceled" />) is returned.
+  /// </returns>
+  public static TryAsync<TSuccess> Filter<TSuccess>(
+    this TryAsync<TSuccess> tryAsync,
+    Func<TSuccess, Exception> ifCanceled,
+    CancellationToken cancellationToken
+  )
+  {
+    return tryAsync.Filter(_ => !cancellationToken.IsCancellationRequested, ifCanceled);
+  }
+
+  /// <summary>
+  ///   Returns a <see cref="TryAsync{A}" /> which filters the result of <paramref name="tryAsync" /> based upon whether
+  ///   the provided <paramref name="cancellationToken" /> is canceled (via
+  ///   <see cref="System.Threading.CancellationToken.IsCancellationRequested" />).
+  /// </summary>
+  /// <param name="tryAsync">A <see cref="TryAsync{A}" />.</param>
+  /// <param name="cancellationToken">An asynchronous operation cancellation token.</param>
+  /// <typeparam name="TSuccess">A success type.</typeparam>
+  /// <returns>
+  ///   A <see cref="TryAsync{A}" />.
+  ///   If <paramref name="cancellationToken" /> is not canceled: current <typeparamref name="TSuccess" /> is returned.
+  ///   If canceled: an <see cref="OperationCanceledException" /> is returned.
+  /// </returns>
+  public static TryAsync<TSuccess> Filter<TSuccess>(
+    this TryAsync<TSuccess> tryAsync,
+    CancellationToken cancellationToken
+  )
+  {
+    return tryAsync.Filter(_ => new OperationCanceledException(cancellationToken), cancellationToken);
+  }
+
+  /// <summary>
   ///   Execute a side effect and returns <paramref name="tryAsync" /> result unchanged.
   /// </summary>
   /// <remarks>

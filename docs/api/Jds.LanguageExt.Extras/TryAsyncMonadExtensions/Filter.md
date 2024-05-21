@@ -1,4 +1,30 @@
-# TryAsyncMonadExtensions.Filter&lt;TSuccess&gt; method (1 of 2)
+# TryAsyncMonadExtensions.Filter&lt;TSuccess&gt; method (1 of 4)
+
+Returns a TryAsync which filters the result of *tryAsync* based upon whether the provided *cancellationToken* is canceled (via IsCancellationRequested).
+
+```csharp
+public static TryAsync<TSuccess> Filter<TSuccess>(this TryAsync<TSuccess> tryAsync, 
+    CancellationToken cancellationToken)
+```
+
+| parameter | description |
+| --- | --- |
+| TSuccess | A success type. |
+| tryAsync | A TryAsync. |
+| cancellationToken | An asynchronous operation cancellation token. |
+
+## Return Value
+
+A TryAsync. If *cancellationToken* is not canceled: current *TSuccess* is returned. If canceled: an OperationCanceledException is returned.
+
+## See Also
+
+* class [TryAsyncMonadExtensions](../TryAsyncMonadExtensions.md)
+* namespace [Jds.LanguageExt.Extras](../../LanguageExt.Extras.md)
+
+---
+
+# TryAsyncMonadExtensions.Filter&lt;TSuccess&gt; method (2 of 4)
 
 Returns a TryAsync which filters the result of *tryAsync*. When *filter* returns `false`, *onFalse* creates the failure result.
 
@@ -25,7 +51,34 @@ A TryAsync. If *filter* returns true, current *TSuccess* is returned. If it retu
 
 ---
 
-# TryAsyncMonadExtensions.Filter&lt;TSuccess&gt; method (2 of 2)
+# TryAsyncMonadExtensions.Filter&lt;TSuccess&gt; method (3 of 4)
+
+Returns a TryAsync which filters the result of *tryAsync* based upon whether the provided *cancellationToken* is canceled (via IsCancellationRequested).
+
+```csharp
+public static TryAsync<TSuccess> Filter<TSuccess>(this TryAsync<TSuccess> tryAsync, 
+    Func<TSuccess, Exception> ifCanceled, CancellationToken cancellationToken)
+```
+
+| parameter | description |
+| --- | --- |
+| TSuccess | A success type. |
+| tryAsync | A TryAsync. |
+| ifCanceled | A function which will provide the cancellation Exception when IsCancellationRequested returns `true`. |
+| cancellationToken | An asynchronous operation cancellation token. |
+
+## Return Value
+
+A TryAsync. If *cancellationToken* is not canceled: current *TSuccess* is returned. If canceled: the converted Exception (from *ifCanceled*) is returned.
+
+## See Also
+
+* class [TryAsyncMonadExtensions](../TryAsyncMonadExtensions.md)
+* namespace [Jds.LanguageExt.Extras](../../LanguageExt.Extras.md)
+
+---
+
+# TryAsyncMonadExtensions.Filter&lt;TSuccess&gt; method (4 of 4)
 
 Returns a TryAsync which filters the result of *tryAsync*. When *filter* returns `false`, *onFalse* creates the failure result.
 

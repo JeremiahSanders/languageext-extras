@@ -3,7 +3,7 @@
   "isRoot": true,
   "tools": {
     "cicee": {
-      "version": "1.5.1",
+      "version": "1.11.0",
       "commands": [
         "cicee"
       ]

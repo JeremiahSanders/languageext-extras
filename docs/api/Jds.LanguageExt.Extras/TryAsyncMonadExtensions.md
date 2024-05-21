@@ -10,7 +10,7 @@ public static class TryAsyncMonadExtensions
 
 | name | description |
 | --- | --- |
-| static [Filter&lt;TSuccess&gt;](TryAsyncMonadExtensions/Filter.md)(…) | Returns a TryAsync which filters the result of *tryAsync*. When *filter* returns `false`, *onFalse* creates the failure result. (2 methods) |
+| static [Filter&lt;TSuccess&gt;](TryAsyncMonadExtensions/Filter.md)(…) | Returns a TryAsync which filters the result of *tryAsync*. When *filter* returns `false`, *onFalse* creates the failure result. (4 methods) |
 | static [Tap&lt;TSuccess&gt;](TryAsyncMonadExtensions/Tap.md)(…) | Execute a side effect and returns *tryAsync* result unchanged. (2 methods) |
 | static [TapFailure&lt;TSuccess&gt;](TryAsyncMonadExtensions/TapFailure.md)(…) | Execute a side effect when *tryAsync* fails and returns *tryAsync* result unchanged. (2 methods) |
 | static [TapSuccess&lt;TSuccess&gt;](TryAsyncMonadExtensions/TapSuccess.md)(…) | Execute a side effect when *tryAsync* succeeds and returns *tryAsync* result unchanged. (2 methods) |

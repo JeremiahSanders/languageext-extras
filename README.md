@@ -138,6 +138,10 @@ using Jds.LanguageExt.Extras;
   * Filters `TSuccess` results by executing `filter`. If it returns `true`, the existing value is returned. If it returns `false`, then it executes `onFalse` to create an `Exception`. Memoizes successful results.
 * `TryAsync<TSuccess>.FilterAsync<TSuccess>(Func<TSuccess, Task<bool>> filter, Func<TSuccess, Exception> onFalse)`
   * Filters `TSuccess` results by executing `filter`. If it returns `true`, the existing value is returned. If it returns `false`, then it executes `onFalse` to create an `Exception`. Memoizes successful results.
+* `TryAsync<TSuccess>.Filter<TSuccess>(Func<TSuccess, Exception> ifCanceled, CancellationToken cancellationToken)`
+  * Filters based upon `cancellationToken`. If it is **not** cancelled, the existing value is returned. If it **is** cancelled, then it executes `ifCanceled` to create an `Exception`.
+* `TryAsync<TSuccess>.Filter<TSuccess>(CancellationToken cancellationToken)`
+  * Filters based upon `cancellationToken`. If it is **not** cancelled, the existing value is returned. If it **is** cancelled, then it creates an `OperationCanceledException` with `cancellationToken`.
 * `TryAsync<TSuccess>.Tap<TSuccess>(Action<TSuccess> onSuccess, Action<Exception> onFailure)`
   * Executes a side effect, e.g., logging, based upon the state of the result. The current value is returned unchanged.
 * `TryAsync<TSuccess>.Tap<TSuccess>(Func<TSuccess, Task> onSuccess, Func<Exception, Task> onFailure)`

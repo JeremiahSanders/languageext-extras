@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFrameworks>net10.0;net8.0;net6.0</TargetFrameworks>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <RootNamespace>Jds.LanguageExt.Extras</RootNamespace>
@@ -11,7 +11,7 @@
   <PropertyGroup>
     <Authors>jds</Authors>
     <Company />
-    <Copyright>Copyright (c) 2022 Jeremiah Sanders</Copyright>
+    <Copyright>Copyright (c) 2025 Jeremiah Sanders</Copyright>
     <Description>LanguageExt.Extras</Description>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageId>Jds.LanguageExt.Extras</PackageId>

@@ -17,11 +17,9 @@ set -o nounset  # Fail if an unset variable is used.
 set -o pipefail # Fail pipelines if any command errors, not just the last one.
 
 function ci-publish() {
-  printf "Publishing composed artifacts...\n\n"
-
-  ci-dotnet-nuget-push
-
-  printf "Publishing complete.\n\n"
+  printf "Publishing composed artifacts...\n\n" &&
+    ci-dotnet-nuget-push &&
+    printf "Publishing complete.\n\n"
 }
 
 export -f ci-publish

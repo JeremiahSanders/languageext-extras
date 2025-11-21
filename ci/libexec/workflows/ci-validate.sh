@@ -27,9 +27,8 @@ function ci-validate() {
       -p:GenerateDocumentationFile=true \
       -p:TreatWarningsAsErrors=true &&
     ci-dotnet-build &&
-    ci-dotnet-test
-
-  printf "Validation complete!\n\n"
+    ci-dotnet-test &&
+    printf "Validation complete!\n\n"
 }
 
 export -f ci-validate

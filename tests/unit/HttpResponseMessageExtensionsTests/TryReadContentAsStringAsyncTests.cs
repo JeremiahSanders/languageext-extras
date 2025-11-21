@@ -24,10 +24,10 @@ public class TryReadContentAsStringAsyncTests
   [Fact]
   public async Task GivenInfrastructureFailure_ReturnsException()
   {
-    using HttpContent content = new StringContent(SourceText, Encoding.UTF8);
+    using HttpContent content = new FailingHttpContent();
     using var message = new HttpResponseMessage(HttpStatusCode.OK) { Content = content };
     CancellationTokenSource source = new();
-    source.Cancel(); // Use a canceled token to force a failure.
+    await source.CancelAsync(); // Use a canceled token to force a failure.
 
     var actual = await message.TryReadContentAsStringAsync(source.Token).Try();
 

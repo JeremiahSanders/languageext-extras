@@ -12,9 +12,8 @@ function ci-regenerate-docs() {
     mkdir "${PROJECT_ROOT}/docs/api"
   fi
   ci-compose &&
-    cp -R "${BUILD_DOCS}/md/." "${PROJECT_ROOT}/docs/api/"
-
-  printf "Document regeneration complete.\n\n"
+    cp -R "${BUILD_DOCS}/md/." "${PROJECT_ROOT}/docs/api/" &&
+    printf "Document regeneration complete.\n\n"
 }
 
 export -f ci-regenerate-docs

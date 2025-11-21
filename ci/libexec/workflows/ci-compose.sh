@@ -30,24 +30,21 @@ function ci-compose() {
     local sourcePath="${tempDir}/${dllName}"
     local outputPath="${BUILD_DOCS}/md"
 
-    cd "${PROJECT_ROOT}"
-    dotnet tool restore
-    mkdir -p "${tempDir}"
-
-    dotnet publish "${srcDir}" \
-      --configuration Release \
-      --output "${tempDir}" \
-      --framework "${framework}" \
-      -p:Version="${PROJECT_VERSION_DIST}" \
-      -p:GenerateDocumentationFile=true
-      
-    dotnet xmldocmd "${sourcePath}" "${outputPath}" \
-      --namespace "${namespace}" \
-      --source "${gitSrcRootLink}" \
-      --newline lf \
-      --visibility protected
-
-    rm -rf "${tempDir}"
+    cd "${PROJECT_ROOT}" &&
+      dotnet tool restore &&
+      mkdir -p "${tempDir}" &&
+      dotnet publish "${srcDir}" \
+        --configuration Release \
+        --output "${tempDir}" \
+        --framework "${framework}" \
+        -p:Version="${PROJECT_VERSION_DIST}" \
+        -p:GenerateDocumentationFile=true &&
+      dotnet xmldocmd "${sourcePath}" "${outputPath}" \
+        --namespace "${namespace}" \
+        --source "${gitSrcRootLink}" \
+        --newline lf \
+        --visibility protected &&
+      rm -rf "${tempDir}"
   }
   
   function createDocs() {
@@ -56,13 +53,18 @@ function ci-compose() {
   }
 
   ci-dotnet-publish \
-    --framework "net8.0" \
+    --framework "net10.0" \
     -p:GenerateDocumentationFile=true &&
+    ci-dotnet-publish \
+        --framework "net8.0" \
+        -p:GenerateDocumentationFile=true &&
+    ci-dotnet-publish \
+        --framework "net6.0" \
+        -p:GenerateDocumentationFile=true &&
     ci-dotnet-pack \
       -p:GenerateDocumentationFile=true &&
-    createDocs
-  
-  printf "Composition complete.\n"
+    createDocs &&
+    printf "Composition complete.\n"
 }
 
 export -f ci-compose
